@@ -1,0 +1,25 @@
+name: Check HackMD Updates
+
+on:
+  schedule:
+    - cron: '*/30 * * * *'  # execute per 30 mins
+  workflow_dispatch:  # can manual execute
+
+jobs:
+  check_updates:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.x'
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install requests discord-webhook
+      - name: Run update check script
+        env:
+          HACKMD_API_KEY: ${{ secrets.HACKMD_API_KEY }}
+          DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
+        run: python check_hackmd_updates.py

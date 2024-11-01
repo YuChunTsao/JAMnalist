@@ -1,12 +1,15 @@
 import os
 import json
 import requests
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 from discord_webhook import DiscordWebhook, DiscordEmbed
 
 HACKMD_API_KEY = os.environ['HACKMD_API_KEY']
 DISCORD_WEBHOOK_URL = os.environ['DISCORD_WEBHOOK_URL']
 LAST_CHECK_FILE = 'last_check.json'
+
+def timestamp_to_datetime(timestamp_ms):
+    return datetime.fromtimestamp(timestamp_ms / 1000.0, tz=timezone.utc)
 
 def get_hackmd_notes():
     url = "https://api.hackmd.io/v1/teams/JAM4Polkadot/notes"
@@ -31,11 +34,20 @@ def check_updates():
     
     updated_notes = []
     for note in notes:
-        updated_at = datetime.fromisoformat(note['publishedAt'])
-        if updated_at > last_check_time:
-            updated_notes.append(note)
+        try:
+            last_changed_at = timestamp_to_datetime(note['lastChangedAt'])
+            
+            if last_changed_at > last_check_time:
+                updated_notes.append(note)
+        except (KeyError, ValueError, TypeError) as e:
+            print(f"Error processing note: {e}")
+            print(f"Note data: {note}")
+            continue
     
-    save_last_check({"last_check": datetime.now().isoformat()})
+    # 更新最後檢查時間為當前時間
+    current_time = datetime.now(timezone.utc)
+    save_last_check({"last_check": current_time.isoformat()})
+    
     return updated_notes
 
 def categorize_notes(notes):

@@ -77,7 +77,7 @@ def send_discord_notification(categories):
         if categories[category]:
             embed.add_embed_field(
                 name=f"{category.capitalize()} 文章",
-                value="\n".join([f"- [{note['title']}]({note['url']})" for note in categories[category]]),
+                value="\n".join([f"- [{note['title']}]({note['publishLink']})" for note in categories[category]]),
                 inline=False
             )
     

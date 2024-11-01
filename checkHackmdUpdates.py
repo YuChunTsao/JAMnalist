@@ -71,7 +71,7 @@ def categorize_notes(notes):
 def send_discord_notification(categories):
     webhook = DiscordWebhook(url=DISCORD_WEBHOOK_URL)
     
-    embed = DiscordEmbed(title="HackMD 狀態更新", color=c9e0f0)
+    embed = DiscordEmbed(title="HackMD 狀態更新", color="c9e0f0")
     
     for category in ['on-going', 'commit', 'issues']:
         if categories[category]:

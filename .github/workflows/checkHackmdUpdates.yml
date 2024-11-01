@@ -10,6 +10,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0  # 確保我們有完整的 git 歷史
       - name: Set up Python
         uses: actions/setup-python@v2
         with:
@@ -18,8 +20,15 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           pip install requests discord-webhook
-      - name: Run update check script
+      - name: Run update check script and update JSON file
         env:
           HACKMD_API_KEY: ${{ secrets.HACKMD_API_KEY }}
           DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
         run: python checkHackmdUpdates.py
+  
+      - name: Commit and push if changed
+        run: |
+          git config --global user.name 'ycc3741'
+          git config --global user.email 'mo0307b1006@gmail.com'
+          git add -A
+          git diff --quiet && git diff --staged --quiet || (git commit -m "Update JSON file"; git push)

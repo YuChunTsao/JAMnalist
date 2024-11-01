@@ -17,25 +17,15 @@ def get_hackmd_notes():
     response = requests.get(url, headers=headers)
     return response.json()
 
-def load_last_check():
-    if os.path.exists(LAST_CHECK_FILE):
-        with open(LAST_CHECK_FILE, 'r') as f:
-            return json.load(f)
-    return {"last_check": datetime.now().isoformat()}
-
-def save_last_check(last_check):
-    with open(LAST_CHECK_FILE, 'w') as f:
-        json.dump(last_check, f)
-
 def check_updates():
     last_check = load_last_check()
-    last_check_time = datetime.fromisoformat(last_check['last_check'])
+    last_check_time = int(last_check['last_check']) 
     notes = get_hackmd_notes()
     
     updated_notes = []
     for note in notes:
         try:
-            last_changed_at = timestamp_to_datetime(note['lastChangedAt'])
+            last_changed_at = note['lastChangedAt'] 
             
             if last_changed_at > last_check_time:
                 updated_notes.append(note)
@@ -44,11 +34,22 @@ def check_updates():
             print(f"Note data: {note}")
             continue
     
-    # 更新最後檢查時間為當前時間
-    current_time = datetime.now(timezone.utc)
-    save_last_check({"last_check": current_time.isoformat()})
+    # 更新最後檢查時間為當前時間的毫秒時間戳
+    current_time = int(datetime.now().timestamp() * 1000)
+    save_last_check({"last_check": current_time})
     
     return updated_notes
+
+def load_last_check():
+    if os.path.exists(LAST_CHECK_FILE):
+        with open(LAST_CHECK_FILE, 'r') as f:
+            data = json.load(f)
+            return data
+    return {"last_check": 0}  # if file not exist, return 0
+
+def save_last_check(last_check):
+    with open(LAST_CHECK_FILE, 'w') as f:
+        json.dump(last_check, f)
 
 def categorize_notes(notes):
     categories = {

@@ -45,7 +45,10 @@ def load_last_check():
         with open(LAST_CHECK_FILE, 'r') as f:
             data = json.load(f)
             return data
-    return {"last_check": 0}  # if file not exist, return 0
+    else:
+        initial_data = {"last_check": int(datetime.now().timestamp() * 1000)}
+        save_last_check(initial_data)
+        return initial_data
 
 def save_last_check(last_check):
     with open(LAST_CHECK_FILE, 'w') as f:

@@ -8,10 +8,13 @@ on:
 jobs:
   check_updates:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
     steps:
       - uses: actions/checkout@v2
         with:
           fetch-depth: 0  # make sure we have entire history
+          token: ${{ secrets.PAT }}
       - name: Set up Python
         uses: actions/setup-python@v2
         with:
@@ -32,5 +35,3 @@ jobs:
           git config --global user.email 'github-actions[bot]@users.noreply.github.com'
           git add -A
           git diff --quiet && git diff --staged --quiet || (git commit -m "Update JSON file"; git push)
-        env:
-          GITHUB_TOKEN: ${{ secrets.COMMIT_GITHUB_TOKEN }}

@@ -9,7 +9,7 @@ DISCORD_WEBHOOK_URL = os.environ['DISCORD_WEBHOOK_URL']
 LAST_CHECK_FILE = 'last_check.json'
 
 def get_hackmd_notes():
-    url = "https://api.hackmd.io/v1/notes"
+    url = "https://api.hackmd.io/v1/teams/JAM4Polkadot/notes"
     headers = {"Authorization": f"Bearer {HACKMD_API_KEY}"}
     response = requests.get(url, headers=headers)
     return response.json()

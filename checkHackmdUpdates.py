@@ -103,6 +103,10 @@ def send_discord_notification(categories):
                 value="\n".join([f"- [{note['title']}]({note['publishLink']})" for note in categories[category]]),
                 inline=False
             )
+
+    # if embed is empty, don't send notification
+    if not embed.fields:
+        return
     
     webhook.add_embed(embed)
     webhook.execute()

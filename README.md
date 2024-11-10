@@ -13,7 +13,7 @@ pip install --upgrade pip
 pip install -r requirements.txt
 ```
 
-### Create API Token
+### Create API Token and Webhook URL
 
 In this project, we use HackMD API and Discord Webhook URL to create a bot that notifies users about their activities on HackMD.
 
@@ -53,9 +53,15 @@ python checkHackmdUpdates.py
 
 ## Deployment
 
-The script will be deployed using GitHub Actions. You need to set the `HACKMD_API_KEY` and `DISCORD_WEBHOOK_URL` secrets in the repository settings.
+The script will be deployed using GitHub Actions. You need to set the `HACKMD_API_KEY`, `DISCORD_WEBHOOK_URL`, and `PAT`(Personal Access Token) secrets in the repository settings.
 
 - `Repository` -> `Settings` -> `Secrets and variables` -> `Actions`
 - Click on `New repository secret`
 - Create a secret with the name `HACKMD_API_KEY` and paste the API token
 - Create a secret with the name `DISCORD_WEBHOOK_URL` and paste the Webhook URL
+
+### PAT (Personal Access Token)
+
+- Go to [GitHub](https://github.com) and login
+- Click on `Settings` -> `Developer settings` -> `Personal access tokens` -> `Generate new token`
+- Copy the token and save it in the repository secrets (`PAT`)

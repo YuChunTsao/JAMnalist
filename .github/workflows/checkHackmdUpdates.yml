@@ -22,7 +22,7 @@ jobs:
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install requests discord-webhook
+          pip install -r requirements.txt
       - name: Run update check script and update JSON file
         env:
           HACKMD_API_KEY: ${{ secrets.HACKMD_API_KEY }}

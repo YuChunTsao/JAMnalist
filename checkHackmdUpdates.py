@@ -1,11 +1,22 @@
 import os
 import json
 import requests
-from datetime import datetime, timedelta, timezone
+from datetime import datetime, timezone
 from discord_webhook import DiscordWebhook, DiscordEmbed
+from dotenv import load_dotenv
 
-HACKMD_API_KEY = os.environ['HACKMD_API_KEY']
-DISCORD_WEBHOOK_URL = os.environ['DISCORD_WEBHOOK_URL']
+load_dotenv()
+
+HACKMD_API_KEY = os.environ["HACKMD_API_KEY"]
+# for development, read from .env file
+if not HACKMD_API_KEY:
+    HACKMD_API_KEY = os.getenv("HACKMD_API_KEY")
+
+DISCORD_WEBHOOK_URL = os.environ["DISCORD_WEBHOOK_URL"]
+# for development, read from .env file
+if not DISCORD_WEBHOOK_URL:
+    DISCORD_WEBHOOK_URL = os.getenv("DISCORD_WEBHOOK_URL")
+
 LAST_CHECK_FILE = 'last_check.json'
 
 def timestamp_to_datetime(timestamp_ms):
@@ -14,8 +25,17 @@ def timestamp_to_datetime(timestamp_ms):
 def get_hackmd_notes():
     url = "https://api.hackmd.io/v1/teams/JAM4Polkadot/notes"
     headers = {"Authorization": f"Bearer {HACKMD_API_KEY}"}
-    response = requests.get(url, headers=headers)
-    return response.json()
+
+    try:
+        response = requests.get(url, headers=headers)
+        if response.status_code == 200:
+            return response.json()
+        else:
+            print(f"Request failed with status code: {response.status_code}")
+            return [] 
+    except requests.exceptions.RequestException as e:
+        print(f"Request failed: {e}")
+        return [] 
 
 def check_updates():
     last_check = load_last_check()

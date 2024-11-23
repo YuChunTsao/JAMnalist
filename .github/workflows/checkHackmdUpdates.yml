@@ -2,7 +2,7 @@ name: Check HackMD Updates
 
 on:
   schedule:
-    - cron: '0 * * * *'  # execute per 30 mins
+    - cron: '0 0 * * *'  # execute per day
   workflow_dispatch:  # can manual execute
 
 jobs:

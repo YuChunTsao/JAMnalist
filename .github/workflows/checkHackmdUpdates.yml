@@ -1,8 +1,8 @@
 name: Check HackMD Updates
 
 on:
-  schedule:
-    - cron: '0 12 * * *' # execute per day at 20:00 UTC+8
+  # schedule:
+  #  - cron: '0 12 * * *' # execute per day at 20:00 UTC+8
   workflow_dispatch: # can manual execute
 
 jobs:
